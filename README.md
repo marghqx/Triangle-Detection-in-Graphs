@@ -19,10 +19,10 @@ It is built using **Flask** for the backend and plain HTML/JavaScript for the fr
 
 | Example |
 |---------|
-| **Home Page**<br>![Home Page](screenshots/home.png) |
-| **Graph with triangles**<br>![Triangles](screenshots/triangle_graph.png) |
-| **No triangles**<br>![No Triangles](screenshots/no_triangles.png) |
-| **Disconnected graph**<br>![Disconnected](screenshots/disconnected.png) |
+| **Home Page**<br><p align="center"><img src="screenshots/home.png" width="400"/></p> |
+| **Graph with triangles**<br><p align="center"><img src="screenshots/triangle_graph.png" width="400"/></p> |
+| **No triangles**<br><p align="center"><img src="screenshots/no_triangles.png" width="400"/></p> |
+| **Disconnected graph**<br><p align="center"><img src="screenshots/disconnected.png" width="400"/></p> |
 
 ---
 
