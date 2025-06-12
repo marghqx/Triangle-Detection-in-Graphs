@@ -25,6 +25,7 @@ It is built using **Flask** for the backend and plain HTML/JavaScript for the fr
 | **No triangles**<br><p align="center"><img src="screenshots/no_triangles.png" width="400"/></p> |
 | **Disconnected graph**<br><p align="center"><img src="screenshots/disconnected.png" width="400"/></p> |
 </div>
+
 ---
 
 ## What is a Triangle in a Graph?
