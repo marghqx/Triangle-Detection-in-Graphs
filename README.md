@@ -17,10 +17,12 @@ It is built using **Flask** for the backend and plain HTML/JavaScript for the fr
 
 ## Screenshots
 
-| Home Page | Analysis Result |
-|-----------|-----------------|
-| ![Home Page](screenshots/home.png) | ![Analysis Result](screenshots/result.png) |
-
+| Example |
+|---------|
+| **Home Page**<br>![Home Page](screenshots/home.png) |
+| **Graph with triangles**<br>![Triangles](screenshots/triangle_graph.png) |
+| **No triangles**<br>![No Triangles](screenshots/no_triangles.png) |
+| **Disconnected graph**<br>![Disconnected](screenshots/disconnected.png) |
 
 ---
 
