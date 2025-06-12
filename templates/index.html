@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Triangle Detection in Undirected Graphs</title>
+<style>
+    body {
+        font-family: sans-serif;
+        background: #fafafa;
+        margin: 0 auto;
+        padding: 20px;
+        color: #2c3e50;
+        line-height: 1.5;
+        max-width: 700px;
+        font-size: 14px;
+    }
+
+    header {
+        border-bottom: 2px solid #3498db;
+        margin-bottom: 20px;
+    }
+
+    header h1 {
+        margin: 0;
+        color: #2980b9;
+        font-size: 1.8em;
+    }
+
+    header p {
+        margin-top: 5px;
+        font-style: italic;
+        color: #7f8c8d;
+        font-size: 0.9em;
+    }
+
+    section {
+        background: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 25px;
+    }
+
+    section h2 {
+        color: #34495e;
+        border-bottom: 1px solid #bdc3c7;
+        padding-bottom: 6px;
+        margin-top: 0;
+        font-size: 1.2em;
+    }
+
+    pre, #result {
+        background: #ecf0f1;
+        padding: 12px;
+        border-radius: 5px;
+        font-family: monospace;
+        font-size: 0.85em;
+        color: #2c3e50;
+        white-space: pre-wrap;
+    }
+
+    label {
+        font-weight: bold;
+        display: block;
+        margin-top: 8px;
+        font-size: 0.95em;
+    }
+
+    textarea {
+        width: 100%;
+        height: 110px;
+        padding: 8px;
+        font-family: monospace;
+        font-size: 0.9em;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        resize: vertical;
+    }
+
+    input[type="file"] {
+        margin-top: 6px;
+        font-size: 0.9em;
+    }
+
+    .button-group {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    button {
+        background: #2980b9;
+        color: white;
+        border: none;
+        padding: 9px 18px;
+        font-size: 1em;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #1f5f8b;
+    }
+
+    #clearFile {
+        background: #c0392b;
+    }
+
+    #clearFile:hover {
+        background: #922b21;
+    }
+
+    .error {
+        color: #c0392b;
+        font-weight: bold;
+    }
+
+    footer {
+        text-align: center;
+        color: #7f8c8d;
+        font-size: 0.8em;
+        margin-top: 40px;
+    }
+</style>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Triangle detection in connected undirected graphs</h1>
+        <p>Analyze graph structure from adjacency lists - detect triangle subgraphs</p>
+    </header>
+
+    <section>
+        <h2>What are triangles in graphs?</h2>
+        <p>
+            A triangle in a graph is a subgraph consisting of three vertices, where each vertex is connected to the other two - i.e., a cycle of length 3.
+            Triangles are important in computer network analysis and distributed systems, as they indicate strong mutual connections between nodes, affecting both resilience and performance.
+        </p>
+        <p>
+            This application identifies triangles in <strong>undirected</strong> and <strong>connected</strong> graphs - meaning every pair of vertices is reachable via some path.
+        </p>
+    </section>
+
+    <section>
+        <h2>Data format - adjacency list in JSON</h2>
+        <p>The graph should be represented as an adjacency list in JSON format, where each key is a vertex and the corresponding value is a list of its neighbors.</p>
+        <p>Example graph:</p>
+        <pre>{
+    "0": ["1", "2"],
+    "1": ["0", "2", "3"],
+    "2": ["0", "1", "3"],
+    "3": ["1", "2"]
+}</pre>
+        <p><em>Note:</em> Both keys and values must be written as <strong>strings</strong> (in quotes).</p>
+    </section>
+
+    <section>
+        <h2>Enter a Graph to Analyze</h2>
+        <form id="graphForm">
+            <label for="graphInput">Manually enter the graph (JSON):</label>
+            <textarea id="graphInput" placeholder='Enter JSON here...'></textarea>
+
+            <label for="fileInput">Or upload a JSON or text (.txt) file containing the data in JSON format:</label>
+            <input type="file" id="fileInput" accept=".json,.txt" />
+
+            <div class="button-group">
+                <button type="button" id="clearFile">Clear File</button>
+                <button type="submit">Check Graph</button>
+            </div>
+        </form>
+
+        <div id="result">Waiting for input...</div>
+    </section>
+
+<script>
+    $('#graphForm').submit(function(e) {
+        e.preventDefault();
+        let graphData = $('#graphInput').val();
+
+        if ($('#fileInput')[0].files.length > 0) {
+            let file = $('#fileInput')[0].files[0];
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                graphData = e.target.result;
+                sendGraph(graphData);
+            };
+            reader.readAsText(file);
+        } else {
+            sendGraph(graphData);
+        }
+    });
+
+    $('#clearFile').click(function() {
+        $('#fileInput').val('');
+        $('#result').text('Uploaded file has been cleared.');
+    });
+
+    function sendGraph(graphData) {
+        $.post('/check', { graph: graphData }, function(response) {
+            if (response.error) {
+                $('#result').html('<span class="error">Error: ' + response.error + '</span>');
+            } else {
+                if (!response.connected) {
+                    $('#result').html('<span class="error">The graph is not connected. Triangle search skipped.</span>');
+                } else {
+                    let resultText = 'Graph is connected: YES\n\n';
+                    resultText += 'Found triangles:\n';
+                    if(response.triangles.length > 0){
+                        response.triangles.forEach(function(tri){
+                            resultText += '- [' + tri.join(', ') + ']\n';
+                        });
+                    } else {
+                        resultText += 'No triangles found in the graph.';
+                    }
+                    $('#result').text(resultText);
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>
+
