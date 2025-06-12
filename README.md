@@ -18,7 +18,7 @@ It is built using **Flask** for the backend and plain HTML/JavaScript for the fr
 ## Screenshots
 <div align="center">
   
-| Example |
+| Examples |
 |---------|
 | **Home Page**<br><p align="center"><img src="screenshots/home.png" width="400"/></p> |
 | **Graph with triangles**<br><p align="center"><img src="screenshots/triangle_graph.png" width="400"/></p> |
